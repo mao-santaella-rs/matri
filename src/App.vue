@@ -15,6 +15,8 @@ import HelloWorld from '@/components/HelloWorld.vue'
 *
   font-family: 'Tiro Devanagari Sanskrit', serif
 
+h1, h2, h3
+  color: #703138
 
 .main-container
   min-height: 100vh
@@ -22,4 +24,8 @@ import HelloWorld from '@/components/HelloWorld.vue'
   background-repeat: no-repeat
   background-attachment: fixed
   background-size: cover
+
+img
+  display: block
+  width: 100%
 </style>
