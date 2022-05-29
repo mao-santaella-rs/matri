@@ -1,32 +1,94 @@
-import type { guestForDb, storeSavedGuest, storeState } from '../types/guests'
+import type { guestForDb, storeSavedGuest } from '../types/guests'
 
 import { defineStore } from 'pinia'
-import { collection, getDocs, addDoc } from 'firebase/firestore'
+import {
+  collection,
+  getDocs,
+  addDoc,
+  onSnapshot,
+  query,
+  where,
+  doc,
+  getDoc,
+  updateDoc,
+  deleteDoc,
+} from 'firebase/firestore'
 import db from './firestore'
 
 const usersRef = collection(db, 'guests')
 
 export const useGuestsStore = defineStore({
   id: 'guestsStore',
-  state: (): storeState => ({
-    guests: [],
+  state: () => ({
+    guests: [] as storeSavedGuest[],
+    guest: {} as storeSavedGuest,
   }),
   getters: {
-    getUser: (state) => state.guests,
+    getAllGuests: (state) => state.guests,
   },
   actions: {
     async fetchGuests() {
       try {
         const snapshot = await getDocs(usersRef)
-        snapshot.docs.forEach((doc) => {
-          this.guests.push({ ...doc.data(), id: doc.id } as storeSavedGuest)
-        })
+        this.guests = snapshot.docs.map(
+          (doc) => ({ ...doc.data(), id: doc.id } as storeSavedGuest),
+        )
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    suscribeToGuests() {
+      onSnapshot(usersRef, (snapshot) => {
+        this.guests = snapshot.docs.map(
+          (doc) => ({ ...doc.data(), id: doc.id } as storeSavedGuest),
+        )
+      })
+    },
+    async fetchGuestByCode(code: string) {
+      const fetchQuery = query(usersRef, where('code', '==', code))
+      try {
+        const snapshot = await getDocs(fetchQuery)
+        const response = snapshot.docs[0]
+        this.guest = { ...response.data(), id: response.id } as storeSavedGuest
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    async fetchGuestById(guestId: string) {
+      try {
+        const docRef = doc(db, 'guests', guestId)
+        const response = await getDoc(docRef)
+        this.guest = { ...response.data(), id: response.id } as storeSavedGuest
       } catch (error) {
         console.error(error)
       }
     },
     async addGuest(guest: guestForDb) {
-      addDoc(usersRef, guest)
+      try {
+        await addDoc(usersRef, guest)
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    async updateGuest(guestObj: storeSavedGuest) {
+      try {
+        const docRef = doc(db, 'guests', guestObj.id)
+        await updateDoc(docRef, {
+          code: guestObj.code,
+          greet: guestObj.greet,
+          names: guestObj.names,
+        })
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    async deleteGuest(guestId: string) {
+      try {
+        const docRef = doc(db, 'guests', guestId)
+        await deleteDoc(docRef)
+      } catch (error) {
+        console.error(error)
+      }
     },
   },
 })
