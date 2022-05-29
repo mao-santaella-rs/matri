@@ -10,10 +10,10 @@ import HelloWorld from '@/components/HelloWorld.vue'
 </script>
 
 <style lang="sass">
-@import url('https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Sanskrit&display=swap')
+@import url('https://fonts.googleapis.com/css2?family=Abhaya+Libre&display=swap')
 
 *
-  font-family: 'Tiro Devanagari Sanskrit', serif
+  font-family: 'Abhaya Libre', serif
 
 h1, h2, h3
   color: #703138
