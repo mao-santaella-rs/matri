@@ -27,4 +27,14 @@ h1, h2, h3
 img
   display: block
   width: 100%
+
+.button
+  background-color: #703138
+  border: none
+  color: white
+  padding: 10px 15px
+  font-size: 24px
+  text-decoration: none
+  &:hover
+    color: white
 </style>
