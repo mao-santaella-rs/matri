@@ -13,7 +13,7 @@ import {
   updateDoc,
   deleteDoc,
 } from 'firebase/firestore'
-import db from './firestore'
+import { db } from './firestore'
 
 const usersRef = collection(db, 'guests')
 
