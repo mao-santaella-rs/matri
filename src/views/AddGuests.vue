@@ -31,7 +31,11 @@
     </div>
 
     <label class="form-label">Nombres</label>
-    <div v-for="(name, nameIdx) in names" :key="'name-' + nameIdx" class="row">
+    <div
+      v-for="(name, nameIdx) in names"
+      :key="'name-' + nameIdx"
+      class="row align-items-center"
+    >
       <div class="col mb-2">
         <div class="input-group">
           <span class="input-group-text" :id="`name-${nameIdx}`"> Nombre </span>
@@ -53,6 +57,14 @@
             :aria-describedby="`alias-${nameIdx}`"
           />
         </div>
+      </div>
+      <div
+        v-if="names.length > 1"
+        class="col-auto mb-2 d-flex align-items-center"
+      >
+        <button @click="deleteName(nameIdx)" class="list-edit-btn">
+          <img src="../assets/bin.png" alt="" />
+        </button>
       </div>
     </div>
     <div class="d-flex justify-content-end mb-4">
@@ -165,7 +177,7 @@ const guestsStore = useGuestsStore()
 
 guestsStore.suscribeToGuests()
 
-// Form
+// data
 const editId = ref('')
 const deleteId = ref('')
 const greet = ref('Queridos')
@@ -177,6 +189,7 @@ const names = ref([
   },
 ])
 
+// Form
 function addName() {
   names.value.push({
     name: '',
@@ -201,6 +214,10 @@ function onSave() {
   } else {
     addGuest()
   }
+}
+
+function deleteName(nameIdx: number) {
+  names.value.splice(nameIdx, 1)
 }
 
 // manipulate db
