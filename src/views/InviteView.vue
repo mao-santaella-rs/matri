@@ -5,15 +5,16 @@
     </div>
     <div class="invite__greet">
       <div class="display-1 text-center invite__greet__salutation animate">
-        Queridos
+        {{ guest.greet }}
       </div>
       <div
         class="display-3 text-center invite__greet__names animate animate__delay-1s"
       >
-        Tio P, Leona y Juanita
+        {{ guestNames }}
       </div>
       <div class="h2 text-center invite__greet__text animate animate__delay-2s">
-        Con amor y profunda alegría queremos que hagan parte de un día muy
+        Con amor y profunda alegría queremos que
+        {{ guest.names.length > 1 ? 'hagan' : 'hagas' }} parte de un día muy
         especial, porque…
       </div>
     </div>
@@ -37,8 +38,13 @@
             <p class="text-center mb-0 px-md-4">
               Con la ayuda de Dios y de los Ángeles nos conocimos, con su guía
               divina nos realizamos y en nuestro amor su presencia descubrimos,
-              por lo que queremos hacerlos partícipes de la unión que a ellos
-              consagramos.
+              por lo que queremos
+              {{
+                guest.names.length > 1
+                  ? 'hacerlos partícipes'
+                  : 'hacerte partícipe'
+              }}
+              de la unión que a ellos consagramos.
             </p>
           </div>
         </div>
@@ -122,8 +128,9 @@
               href="https://g.page/HotelBuenosAiresBarichara?share"
               target="_blank"
               class="button"
-              >Abrir en google maps</a
             >
+              Abrir en google maps
+            </a>
           </div>
         </div>
       </div>
@@ -132,7 +139,26 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onBeforeUnmount } from 'vue'
+import { onMounted, onBeforeUnmount, computed } from 'vue'
+import { useGuestsStore } from '../stores/guests'
+// displayed data
+const guestsStore = useGuestsStore()
+
+const guest = computed(() => guestsStore.getGuest)
+const guestNames = computed(() => {
+  if (!guest.value.id) return ''
+  return guest.value.names.reduce((finalStr, name, idx, arr) => {
+    let separator = ''
+    if (idx === arr.length - 1 && arr.length > 1) {
+      separator = ' y '
+    } else if (idx > 0) {
+      separator = ', '
+    }
+    return finalStr + separator + name.alias
+  }, '')
+})
+
+// animations
 const animationQuery = '.animate'
 const intersectionObserver = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
@@ -232,4 +258,7 @@ onBeforeUnmount(() => {
     &--vert
       width: 2px
       height: 100%
+
+.animate
+  opacity: 0
 </style>

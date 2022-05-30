@@ -25,6 +25,7 @@ export const useGuestsStore = defineStore({
   }),
   getters: {
     getAllGuests: (state) => state.guests,
+    getGuest: (state) => state.guest,
   },
   actions: {
     async fetchGuests() {
@@ -49,7 +50,16 @@ export const useGuestsStore = defineStore({
       try {
         const snapshot = await getDocs(fetchQuery)
         const response = snapshot.docs[0]
-        this.guest = { ...response.data(), id: response.id } as storeSavedGuest
+        if (response) {
+          const storeGuest = {
+            ...response.data(),
+            id: response.id,
+          } as storeSavedGuest
+          this.guest = storeGuest
+          return storeGuest
+        } else {
+          return response
+        }
       } catch (error) {
         console.error(error)
       }
