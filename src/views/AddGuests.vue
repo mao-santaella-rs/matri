@@ -1,6 +1,9 @@
 <template>
   <div class="container pt-5">
-    <h1 class="mb-4">Agregar invitados</h1>
+    <div class="d-flex justify-content-between align-items-center">
+      <h1 class="mb-4">Agregar invitados</h1>
+      <button @click="logout" class="btn btn-primary">logOut</button>
+    </div>
 
     <div v-if="editId.length" class="alert alert-info text-center" role="alert">
       EDITANDO INVITADO YA GUARDADO
@@ -169,11 +172,15 @@
   </div>
 </template>
 <script setup lang="ts">
-import type { storeSavedGuest } from '../types/guests'
+import type { storeSavedGuest } from '../types/guests.store'
 import { ref, toRaw, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { useGuestsStore } from '../stores/guests'
+import { useAuthStore } from '../stores/auth'
 
+const router = useRouter()
 const guestsStore = useGuestsStore()
+const authStore = useAuthStore()
 
 guestsStore.suscribeToGuests()
 
@@ -253,6 +260,11 @@ function deleteGuest() {
   guestsStore.deleteGuest(toRaw(deleteId.value)).then(() => {
     cancelDelete()
   })
+}
+
+function logout() {
+  router.push({ name: 'invite' })
+  authStore.signOut()
 }
 
 // List

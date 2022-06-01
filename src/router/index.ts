@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useGuestsStore } from '../stores/guests'
-import { signInWithGoogle } from '../stores/firestore'
+import { useAuthStore } from '../stores/auth'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -32,23 +32,27 @@ const router = createRouter({
       path: '/add',
       name: 'add',
       component: () => import('../views/AddGuests.vue'),
-      beforeEnter: (to, from, next) => {
-        signInWithGoogle()
-          .then((response) => {
-            const allowedEmails = [
-              'mao8a87@gmail.com',
-              'jhanabustillo1107@gmail.com',
-            ]
-            if (allowedEmails.includes(response.user.email as string)) {
+      beforeEnter: async (to, from, next) => {
+        const authStore = useAuthStore()
+        try {
+          await authStore.suscribe()
+          if (!authStore.isSignedIn) {
+            await authStore.signInWithGoogle()
+          }
+          if (authStore.isSignedIn) {
+            if (authStore.isUserAllowed) {
               next()
             } else {
+              authStore.signOut()
               next({ name: 'login' })
             }
-          })
-          .catch((error) => {
-            console.log(error)
+          } else {
             next({ name: 'login' })
-          })
+          }
+        } catch (error) {
+          console.error(error)
+          next({ name: 'login' })
+        }
       },
     },
   ],

@@ -1,4 +1,4 @@
-import type { guestForDb, storeSavedGuest } from '../types/guests'
+import type { guestForDb, storeSavedGuest } from '../types/guests.store'
 
 import { defineStore } from 'pinia'
 import {
