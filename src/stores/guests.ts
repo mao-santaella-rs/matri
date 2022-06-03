@@ -15,13 +15,15 @@ import {
 } from 'firebase/firestore'
 import { db } from './firestore'
 
-const usersRef = collection(db, 'guests')
+const guestsRef = collection(db, 'guests')
 
 export const useGuestsStore = defineStore({
   id: 'guestsStore',
   state: () => ({
     guests: [] as storeSavedGuest[],
     guest: {} as storeSavedGuest,
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    suscriptionFn: null as Function | null,
   }),
   getters: {
     getAllGuests: (state) => state.guests,
@@ -30,7 +32,7 @@ export const useGuestsStore = defineStore({
   actions: {
     async fetchGuests() {
       try {
-        const snapshot = await getDocs(usersRef)
+        const snapshot = await getDocs(guestsRef)
         this.guests = snapshot.docs.map(
           (doc) => ({ ...doc.data(), id: doc.id } as storeSavedGuest),
         )
@@ -38,15 +40,19 @@ export const useGuestsStore = defineStore({
         console.error(error)
       }
     },
-    suscribeToGuests() {
-      onSnapshot(usersRef, (snapshot) => {
+    suscribe() {
+      this.suscriptionFn = onSnapshot(guestsRef, (snapshot) => {
         this.guests = snapshot.docs.map(
           (doc) => ({ ...doc.data(), id: doc.id } as storeSavedGuest),
         )
       })
     },
+    unSuscribe() {
+      if (this.suscriptionFn === null) return
+      this.suscriptionFn()
+    },
     async fetchGuestByCode(code: string) {
-      const fetchQuery = query(usersRef, where('code', '==', code))
+      const fetchQuery = query(guestsRef, where('code', '==', code))
       try {
         const snapshot = await getDocs(fetchQuery)
         const response = snapshot.docs[0]
@@ -75,7 +81,7 @@ export const useGuestsStore = defineStore({
     },
     async addGuest(guest: guestForDb) {
       try {
-        await addDoc(usersRef, guest)
+        await addDoc(guestsRef, guest)
       } catch (error) {
         console.error(error)
       }

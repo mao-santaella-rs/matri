@@ -37,4 +37,16 @@ img
   text-decoration: none
   &:hover
     color: white
+
+.icon-btn
+  border: none
+  background-color: transparent
+  padding: 0
+  img
+    width: 24px
+
+  &--sm
+    @extend .icon-btn
+    img
+      width: 18px
 </style>

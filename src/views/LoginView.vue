@@ -37,10 +37,7 @@ watch(code, async (newVal) => {
   } else if (newVal.length === 4) {
     const guest = await guestsStore.fetchGuestByCode(newVal.toString())
     if (guest) {
-      document.cookie =
-        'guest=' +
-        guest.id +
-        '; SameSite=Strict; Secure; expires=Fri, 31 Dec 9999 23:59:59 GMT"'
+      document.cookie = `guest=${guest.id}; SameSite=Strict; Secure; expires=Fri, 31 Dec 9999 23:59:59 GMT`
       router.push({ name: 'invite' })
     } else {
       code.value = ''

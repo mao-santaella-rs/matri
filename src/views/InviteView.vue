@@ -19,6 +19,7 @@
       </div>
     </div>
   </div>
+
   <div class="container">
     <div class="invite__container">
       <div class="row gx-0 justify-content-center">
@@ -110,7 +111,9 @@
           </div>
           <div class="invite__devider--hor animate animate__delay-2s" />
           <div class="d-flex justify-content-center animate animate__delay-3s">
-            <button class="button">Confirmar aquí</button>
+            <button @click="showConfirmForm = true" class="button">
+              Confirmar aquí
+            </button>
           </div>
         </div>
       </div>
@@ -136,11 +139,17 @@
       </div>
     </div>
   </div>
+  <ConfirmationComp
+    :guestsId="guest.id"
+    :show-form="showConfirmForm"
+    @close-form="showConfirmForm = false"
+  />
 </template>
 
 <script setup lang="ts">
-import { onMounted, onBeforeUnmount, computed } from 'vue'
+import { onMounted, onBeforeUnmount, computed, ref } from 'vue'
 import { useGuestsStore } from '../stores/guests'
+import ConfirmationComp from '../components/ConfirmationComp.vue'
 // displayed data
 const guestsStore = useGuestsStore()
 
@@ -157,6 +166,8 @@ const guestNames = computed(() => {
     return finalStr + separator + name.alias
   }, '')
 })
+
+const showConfirmForm = ref(true)
 
 // animations
 const animationQuery = '.animate'

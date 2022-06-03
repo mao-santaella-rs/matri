@@ -182,7 +182,7 @@ const router = useRouter()
 const guestsStore = useGuestsStore()
 const authStore = useAuthStore()
 
-guestsStore.suscribeToGuests()
+guestsStore.suscribe()
 
 // data
 const editId = ref('')
