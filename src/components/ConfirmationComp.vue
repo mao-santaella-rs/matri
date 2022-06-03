@@ -71,12 +71,6 @@
             </label>
           </div>
         </div>
-        <div
-          v-if="showThnaks"
-          class="d-flex justify-content-center mb-4 animate__animated animate__zoomIn animate__faster"
-        >
-          <div class="h3 mb-0">Gracias por confirmar!</div>
-        </div>
         <div class="d-flex justify-content-center">
           <button @click="onConfirm" class="btn btn-primary btn-lg">
             Confirmar
@@ -89,6 +83,12 @@
             }}
             asistencia
           </button>
+        </div>
+        <div
+          v-if="showThnaks"
+          class="d-flex justify-content-center mt-4 mb-1 animate__animated animate__zoomIn animate__faster"
+        >
+          <div class="h3 mb-0">Gracias por confirmar!</div>
         </div>
       </div>
     </div>

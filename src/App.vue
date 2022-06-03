@@ -19,10 +19,20 @@ h1, h2, h3
 
 .main-container
   min-height: 100vh
-  background-image: url('./assets/bg.jpg')
-  background-repeat: no-repeat
-  background-attachment: fixed
-  background-size: cover
+  &:before
+    content: ''
+    display: block
+    position: fixed
+    top: 0
+    left: 0
+    width: 100vw
+    height: 100vh
+    background-image: url('./assets/bg.jpg')
+    background-repeat: no-repeat
+    background-size: cover
+
+  &>div
+    position: relative
 
 img
   display: block

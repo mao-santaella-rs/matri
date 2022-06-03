@@ -230,6 +230,16 @@ onBeforeUnmount(() => {
       color: #764443
       padding: 0 5%
 
+    @media (max-width: 768px)
+      .invite__greet
+        &__salutation
+          font-size: 80px
+        &__names
+          font-size: 50px
+        &__text
+          font-size: 25px
+
+
   &__top-flowers
     position: absolute
     width: 60%
