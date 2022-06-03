@@ -167,7 +167,7 @@ const guestNames = computed(() => {
   }, '')
 })
 
-const showConfirmForm = ref(true)
+const showConfirmForm = ref(false)
 
 // animations
 const animationQuery = '.animate'
