@@ -95,7 +95,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import type { confirmedName } from '../types/confirmations.store'
+import type { ConfirmationName } from '../types/confirmations.store'
 import { defineProps, computed, onMounted, ref, watch, defineEmits } from 'vue'
 import { useGuestsStore } from '../stores/guests'
 import { useConfirmationsStore } from '../stores/confirmations'
@@ -118,7 +118,7 @@ const props = defineProps({
 const guest = computed(() => guestsStore.getGuest)
 const confirmedObj = computed(() => confirmationsStore.getConfirmation)
 
-const names = ref<confirmedName[]>([])
+const names = ref<ConfirmationName[]>([])
 const hotelPay = ref(true)
 const showThnaks = ref(false)
 

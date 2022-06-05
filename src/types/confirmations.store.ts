@@ -1,13 +1,13 @@
-export interface confirmedName {
+export interface ConfirmationName {
   name: string
   confirmed: boolean
 }
 
-export interface confirmedForDb {
+export interface ConfirmationDb {
   hotelPay: boolean
-  names: confirmedName[]
+  names: ConfirmationName[]
 }
 
-export interface storeSavedConfirmed extends confirmedForDb {
+export interface ConfirmationStore extends ConfirmationDb {
   id: string
 }

@@ -1,7 +1,4 @@
-import type {
-  confirmedForDb,
-  storeSavedConfirmed,
-} from '../types/confirmations.store'
+import type { ConfirmationStore } from '../types/confirmations.store'
 import { defineStore } from 'pinia'
 
 import { db } from './firestore'
@@ -15,15 +12,14 @@ import {
   deleteDoc,
   setDoc,
 } from 'firebase/firestore'
-
-const confRef = collection(db, 'allConfirmations')
+const collectionName = 'confirmations'
+const confRef = collection(db, collectionName)
 
 export const useConfirmationsStore = defineStore({
   id: 'confirmationsStore',
   state: () => ({
-    allConfirmations: [] as storeSavedConfirmed[],
-    confirmation: {} as storeSavedConfirmed,
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    allConfirmations: [] as ConfirmationStore[],
+    confirmation: {} as ConfirmationStore,
     suscriptionFn: null as Function | null,
   }),
   getters: {
@@ -32,13 +28,15 @@ export const useConfirmationsStore = defineStore({
   },
   actions: {
     suscribe() {
+      if (this.suscriptionFn) return
+
       this.suscriptionFn = onSnapshot(confRef, (snapshot) => {
         this.allConfirmations = snapshot.docs.map(
           (doc) =>
             ({
               ...doc.data(),
               id: doc.id,
-            } as storeSavedConfirmed),
+            } as ConfirmationStore),
         )
       })
     },
@@ -48,22 +46,22 @@ export const useConfirmationsStore = defineStore({
     },
     async fetchConfirmationById(confirmedId: string) {
       try {
-        const docRef = doc(db, 'confirmations', confirmedId)
+        const docRef = doc(db, collectionName, confirmedId)
         const response = await getDoc(docRef)
         const data = response.data()
         if (data) {
           this.confirmation = {
             ...response.data(),
             id: response.id,
-          } as storeSavedConfirmed
+          } as ConfirmationStore
         }
       } catch (error) {
         console.error(error)
       }
     },
-    async saveConfirmation(confirmedObj: storeSavedConfirmed) {
+    async saveConfirmation(confirmedObj: ConfirmationStore) {
       try {
-        await setDoc(doc(db, 'confirmations', confirmedObj.id), {
+        await setDoc(doc(db, collectionName, confirmedObj.id), {
           hotelPay: confirmedObj.hotelPay,
           names: confirmedObj.names,
         })
@@ -71,9 +69,9 @@ export const useConfirmationsStore = defineStore({
         console.error(error)
       }
     },
-    async updateConfirmation(confirmedObj: storeSavedConfirmed) {
+    async updateConfirmation(confirmedObj: ConfirmationStore) {
       try {
-        const docRef = doc(db, 'confirmations', confirmedObj.id)
+        const docRef = doc(db, collectionName, confirmedObj.id)
         await updateDoc(docRef, {
           hotelPay: confirmedObj.hotelPay,
           names: confirmedObj.names,
@@ -84,7 +82,7 @@ export const useConfirmationsStore = defineStore({
     },
     async deleteConfirmation(confirmedId: string) {
       try {
-        const docRef = doc(db, 'confirmations', confirmedId)
+        const docRef = doc(db, collectionName, confirmedId)
         await deleteDoc(docRef)
       } catch (error) {
         console.error(error)

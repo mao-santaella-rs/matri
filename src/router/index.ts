@@ -31,32 +31,40 @@ const router = createRouter({
     {
       path: '/add',
       name: 'add',
-      component: () => import('../views/AddGuests.vue'),
-      beforeEnter: async (to, from, next) => {
-        const authStore = useAuthStore()
-        try {
-          await authStore.suscribe()
-          if (!authStore.isSignedIn) {
-            await authStore.signInWithGoogle()
-          }
-          if (authStore.isSignedIn) {
-            if (authStore.isUserAllowed) {
-              next()
-            } else {
-              authStore.signOut()
-              next({ name: 'login' })
-            }
-          } else {
-            next({ name: 'login' })
-          }
-        } catch (error) {
-          console.error(error)
-          next({ name: 'login' })
-        }
-      },
+      component: () => import('../views/AddGuestsView.vue'),
+      beforeEnter: async (to, from, next) => checkGoogleSignIn(next),
+    },
+    {
+      path: '/confirm',
+      name: 'confirm',
+      component: () => import('../views/ConfirmationsView.vue'),
+      beforeEnter: async (to, from, next) => checkGoogleSignIn(next),
     },
   ],
 })
+
+async function checkGoogleSignIn(next: Function) {
+  const authStore = useAuthStore()
+  try {
+    await authStore.suscribe()
+    if (!authStore.isSignedIn) {
+      await authStore.signInWithGoogle()
+    }
+    if (authStore.isSignedIn) {
+      if (authStore.isUserAllowed) {
+        next()
+      } else {
+        authStore.signOut()
+        next({ name: 'login' })
+      }
+    } else {
+      next({ name: 'login' })
+    }
+  } catch (error) {
+    console.error(error)
+    next({ name: 'login' })
+  }
+}
 
 function getCookie(cname: string) {
   const cookies = ` ${document.cookie}`.split(';')

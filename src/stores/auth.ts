@@ -48,13 +48,9 @@ export const useAuthStore = defineStore({
     async suscribe() {
       return new Promise((resolve) => {
         onAuthStateChanged(auth, (user) => {
-          if (user) {
-            // @ts-expect-error: user missing some data
-            this.suscribeUser = user
-            resolve(true)
-          } else {
-            resolve(false)
-          }
+          resolve(!!user)
+          // @ts-expect-error: user missing some data
+          this.suscribeUser = user || {}
         })
       })
     },

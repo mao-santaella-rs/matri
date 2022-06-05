@@ -22,7 +22,6 @@ export const useGuestsStore = defineStore({
   state: () => ({
     guests: [] as storeSavedGuest[],
     guest: {} as storeSavedGuest,
-    // eslint-disable-next-line @typescript-eslint/ban-types
     suscriptionFn: null as Function | null,
   }),
   getters: {
