@@ -292,6 +292,7 @@ function editGuestById(guestObj: storeSavedGuest) {
   greet.value = guestObj.greet
   code.value = guestObj.code
   names.value = guestObj.names
+  notice.value = !!guestObj.notice
 }
 
 function openDeleteModal(guestObj: storeSavedGuest) {
@@ -299,6 +300,7 @@ function openDeleteModal(guestObj: storeSavedGuest) {
   greet.value = guestObj.greet
   code.value = guestObj.code
   names.value = guestObj.names
+  notice.value = !!guestObj.notice
 }
 
 function cancelDelete() {
