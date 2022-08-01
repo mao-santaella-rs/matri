@@ -356,10 +356,6 @@ function logout() {
 // List
 const allGuests = computed(() => guestsStore.getAllGuests)
 
-const filteredGuest = computed(() =>
-  allGuests.value.filter((guest) => !guest.notice),
-)
-
 const guests = computed(() => {
   const invitation: storeSavedGuest[] = []
   const participation: storeSavedGuest[] = []
