@@ -78,7 +78,7 @@
         </div>
       </div>
     </div>
-    <div v-if="!guest.notice" class="invite__container">
+    <div class="invite__container">
       <div class="row align-items-center justify-content-center gx-0">
         <div class="col-8 col-md-7">
           <div class="invite__flores-1 animate left">
@@ -91,7 +91,7 @@
             <img src="../assets/texto-fecha.svg" alt="" />
           </div>
           <div class="invite__devider--hor animate top" />
-          <div class="row">
+          <div v-if="!guest.notice" class="row">
             <div class="col-5">
               <div class="invite__texto-1-img animate left animate__delay-1s">
                 <img src="../assets/texto1.svg" alt="" />
@@ -106,22 +106,34 @@
               </div>
             </div>
           </div>
-          <div class="invite__devider--hor animate animate__delay-2s" />
           <div
-            class="h2 text-center invite__extra-text animate animate__delay-2s"
+            v-if="!guest.notice"
+            class="invite__devider--hor animate animate__delay-2s"
+          />
+          <div
+            class="h2 text-center invite__extra-text animate animate__delay-2s mb-4"
           >
             Ceremonia espiritual y<br />
             recepción a continuación.
-            <br />
-            <br />
+          </div>
+          <div
+            v-if="!guest.notice"
+            class="h2 text-center invite__extra-text animate animate__delay-2s"
+          >
             Ellas: bonitas como siempre
             <br />
             Ellos: con su mejor pinta.
             <br />
             (boda campestre)
           </div>
-          <div class="invite__devider--hor animate animate__delay-2s" />
-          <div class="d-flex justify-content-center animate animate__delay-3s">
+          <div
+            v-if="!guest.notice"
+            class="invite__devider--hor animate animate__delay-2s"
+          />
+          <div
+            v-if="!guest.notice"
+            class="d-flex justify-content-center animate animate__delay-3s"
+          >
             <button @click="showConfirmForm = true" class="button">
               Confirmar aquí
             </button>

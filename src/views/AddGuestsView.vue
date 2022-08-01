@@ -102,13 +102,70 @@
         <tr class="table-secondary">
           <th scope="col">Nombres</th>
           <th scope="col">Alias</th>
+          <th scope="col" class="text-center">Invitación</th>
           <th scope="col" class="text-center">Saludo</th>
           <th scope="col" class="text-center">Código</th>
           <th scope="col" class="text-center">Editar</th>
         </tr>
       </thead>
       <tbody>
-        <template v-for="(guest, guestIdx) in allGuests" :key="guest.id">
+        <template
+          v-for="(guest, guestIdx) in guests.invitation"
+          :key="guest.id"
+        >
+          <tr
+            v-for="(name, nameIdx) in guest.names"
+            :key="guest.id + nameIdx"
+            :class="[guestIdx % 2 == 0 ? 'table-light' : 'table-secondary']"
+          >
+            <td>{{ name.name }}</td>
+            <td>{{ name.alias }}</td>
+            <template v-if="nameIdx === 0">
+              <td :rowspan="guest.names.length" class="text-center">
+                {{ getName(guest.names) }}
+              </td>
+              <td :rowspan="guest.names.length" class="text-center">
+                {{ guest.greet }}
+              </td>
+              <td :rowspan="guest.names.length" class="text-center">
+                {{ guest.code }}
+              </td>
+              <td :rowspan="guest.names.length" class="text-center">
+                <div class="d-flex align-items-center justify-content-center">
+                  <button
+                    @click="editGuestById(guest)"
+                    class="list-edit-btn me-3"
+                  >
+                    <img src="../assets/edit.png" alt="" />
+                  </button>
+                  <button @click="openDeleteModal(guest)" class="list-edit-btn">
+                    <img src="../assets/bin.png" alt="" />
+                  </button>
+                </div>
+              </td>
+            </template>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+
+    <h1 class="mb-4">Participaciones</h1>
+
+    <table class="table align-middle">
+      <thead>
+        <tr class="table-secondary">
+          <th scope="col">Nombres</th>
+          <th scope="col">Alias</th>
+          <th scope="col" class="text-center">Saludo</th>
+          <th scope="col" class="text-center">Código</th>
+          <th scope="col" class="text-center">Editar</th>
+        </tr>
+      </thead>
+      <tbody>
+        <template
+          v-for="(guest, guestIdx) in guests.participation"
+          :key="guest.id"
+        >
           <tr
             v-for="(name, nameIdx) in guest.names"
             :key="guest.id + nameIdx"
@@ -185,7 +242,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import type { storeSavedGuest } from '../types/guests.store'
+import type { storeSavedGuest, guestName } from '../types/guests.store'
 import { ref, toRaw, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useGuestsStore } from '../stores/guests'
@@ -209,6 +266,18 @@ const names = ref([
   },
 ])
 const notice = ref(false)
+
+function getName(names: guestName[]) {
+  return names.reduce((finalStr, name, idx, arr) => {
+    let separator = ''
+    if (idx === arr.length - 1 && arr.length > 1) {
+      separator = ' y '
+    } else if (idx > 0) {
+      separator = ', '
+    }
+    return finalStr + separator + name.alias
+  }, '')
+}
 
 // Form
 function addName() {
@@ -286,6 +355,23 @@ function logout() {
 
 // List
 const allGuests = computed(() => guestsStore.getAllGuests)
+
+const filteredGuest = computed(() =>
+  allGuests.value.filter((guest) => !guest.notice),
+)
+
+const guests = computed(() => {
+  const invitation: storeSavedGuest[] = []
+  const participation: storeSavedGuest[] = []
+  allGuests.value.forEach((guest) => {
+    if (guest.notice) {
+      participation.push(guest)
+    } else {
+      invitation.push(guest)
+    }
+  })
+  return { invitation, participation }
+})
 
 function editGuestById(guestObj: storeSavedGuest) {
   editId.value = guestObj.id

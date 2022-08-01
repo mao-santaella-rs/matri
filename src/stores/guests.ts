@@ -92,6 +92,7 @@ export const useGuestsStore = defineStore({
           code: guestObj.code,
           greet: guestObj.greet,
           names: guestObj.names,
+          notice: guestObj.notice,
         })
       } catch (error) {
         console.error(error)
