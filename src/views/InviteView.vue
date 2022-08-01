@@ -12,7 +12,18 @@
       >
         {{ guestNames }}
       </div>
-      <div class="h2 text-center invite__greet__text animate animate__delay-2s">
+      <div
+        v-if="guest.notice"
+        class="h2 text-center invite__greet__text animate animate__delay-2s"
+      >
+        Con amor y profunda alegría queremos
+        {{ guest.names.length > 1 ? 'participarles' : 'participarte' }} de un
+        día muy especial, porque…
+      </div>
+      <div
+        v-else
+        class="h2 text-center invite__greet__text animate animate__delay-2s"
+      >
         Con amor y profunda alegría queremos que
         {{ guest.names.length > 1 ? 'hagan' : 'hagas' }} parte de un día muy
         especial, porque…
@@ -67,7 +78,7 @@
         </div>
       </div>
     </div>
-    <div class="invite__container">
+    <div v-if="!guest.notice" class="invite__container">
       <div class="row align-items-center justify-content-center gx-0">
         <div class="col-8 col-md-7">
           <div class="invite__flores-1 animate left">
@@ -118,7 +129,7 @@
         </div>
       </div>
     </div>
-    <div class="invite__container">
+    <div v-if="!guest.notice" class="invite__container">
       <div class="row w-100 justify-content-center">
         <div class="col-md-10 mb-4">
           <div class="invite__map animate">

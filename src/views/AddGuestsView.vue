@@ -8,9 +8,9 @@
     <div v-if="editId.length" class="alert alert-info text-center" role="alert">
       EDITANDO INVITADO YA GUARDADO
     </div>
-    <div class="row">
-      <div class="col">
-        <div class="input-group mb-3">
+    <div class="row align-items-center">
+      <div class="mb-3 col">
+        <div class="input-group">
           <span class="input-group-text" id="greet"> Saludo </span>
           <input
             v-model="greet"
@@ -20,8 +20,8 @@
           />
         </div>
       </div>
-      <div class="col">
-        <div class="input-group mb-3">
+      <div class="mb-3 col">
+        <div class="input-group">
           <span class="input-group-text" id="code"> Codigo </span>
           <input
             v-model="code"
@@ -29,6 +29,19 @@
             class="form-control"
             aria-describedby="code"
           />
+        </div>
+      </div>
+      <div class="mb-3 col-auto">
+        <div class="form-check form-switch">
+          <input
+            v-model="notice"
+            class="form-check-input"
+            type="checkbox"
+            role="switch"
+            id="notice"
+            checked
+          />
+          <label class="form-check-label" for="notice"> Participación </label>
         </div>
       </div>
     </div>
@@ -195,6 +208,7 @@ const names = ref([
     alias: '',
   },
 ])
+const notice = ref(false)
 
 // Form
 function addName() {
@@ -213,6 +227,7 @@ function resetForm() {
   ]
   code.value = ''
   greet.value = 'Queridos'
+  notice.value = false
 }
 
 function onSave() {
@@ -236,6 +251,7 @@ function addGuest() {
         : `${Math.floor(1000 + Math.random() * 9000)}`,
       greet: greet.value,
       names: toRaw(names.value),
+      notice: toRaw(notice.value),
     })
     .then(() => {
       resetForm()
@@ -249,6 +265,7 @@ function updateGuest() {
       code: toRaw(code.value),
       greet: toRaw(greet.value),
       names: toRaw(names.value),
+      notice: toRaw(notice.value),
     })
     .then(() => {
       editId.value = ''
@@ -316,4 +333,7 @@ function cancelDelete() {
     position: relative
   .card
     width: 600px
+
+.form-check >*
+  cursor: pointer
 </style>
